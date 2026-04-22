@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import java.util.function.Consumer;
 
 import application.Main;
@@ -37,9 +36,9 @@ public class MainViewController implements Initializable {
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller ) -> {
-			controller.setDepartmentService(new DepartmentService());
-			controller.updateTableView();
+		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
+		    controller.setDepartmentService(new DepartmentService());
+		    controller.updateTableView();
 		});
 	}
 	
@@ -53,23 +52,23 @@ public class MainViewController implements Initializable {
 	}
 	
 	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-			VBox newVBox = loader.load();
-			
-			Scene mainScene = Main.getMainScene();
-			VBox mainVBox =(VBox) ((ScrollPane)mainScene.getRoot()).getContent();
-			
-			Node mainMenu = mainVBox.getChildren().get(0);
-			mainVBox.getChildren().clear();
-			mainVBox.getChildren().add(mainMenu);
-			mainVBox.getChildren().addAll(newVBox.getChildren());
-			
-			T controller = loader.getController();
-			initializingAction.accept(controller);
-		} 
-		catch (IOException e) {
-			Alerts.showAlert("IO Excpetion" , "Error loading view", e.getMessage(), AlertType.ERROR);
-		}
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+	        VBox newVBox = loader.load();
+
+	        Scene mainScene = Main.getMainScene();
+	        VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+
+	        Node mainMenu = mainVBox.getChildren().get(0);
+	        mainVBox.getChildren().clear();
+	        mainVBox.getChildren().add(mainMenu);
+	        mainVBox.getChildren().add(newVBox);
+
+	        T controller = loader.getController();
+	        initializingAction.accept(controller);
+
+	    } catch (IOException e) {
+	        Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
+	    }
 	}
 }
